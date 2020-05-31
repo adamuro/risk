@@ -1,3 +1,3 @@
 def img_name(name)
-  'images/' + name + '.png'
+  'images/' + name.downcase.gsub(' ', '_') + '.png'
 end

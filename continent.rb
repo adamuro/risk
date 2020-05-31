@@ -11,6 +11,24 @@ class NorthAmerica
   include Continent
 
   def initialize
-    @regions = [Alaska.new]
+    @regions = [Alaska.new,
+                NorthwestTerritory.new,
+                Alberta.new,
+                Ontario.new,
+                Quebec.new,
+                WesternUnitedStates.new,
+                EasternUnitedStates.new,
+                Mexico.new]
+  end
+end
+
+class SouthAmerica
+  include Continent
+
+  def initialize
+    @regions = [Colombia.new,
+                Peru.new,
+                Brasil.new,
+                Argentina.new]
   end
 end
