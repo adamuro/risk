@@ -1,5 +1,8 @@
 class Region
   Position = Struct.new(:x, :y)
+
+  attr_accessor :color, :name
+
   def initialize(name, x, y)
     @name = name
     @position = Position.new(x, y)
@@ -22,7 +25,7 @@ class Region
   end
 
   def img_name(name)
-    'images/' + name.downcase.gsub(' ', '_') + '.png'
+    'images/map/' + name.downcase.gsub(' ', '_') + '.png'
   end
 end
 

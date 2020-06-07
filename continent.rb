@@ -1,8 +1,16 @@
 require_relative 'region'
+require_relative 'player'
 
 Position = Struct.new(:x, :y)
 
 module Continent
+  def assign_rand(players)
+    regions_shuffle = @regions.shuffle
+    (@regions.count - 1).times do |i|
+      players[i % players.count].add_region(regions_shuffle[i])
+    end
+  end
+
   def draw
     @regions.each(&:draw)
   end
@@ -12,7 +20,7 @@ class NorthAmerica
   include Continent
   attr_accessor :alaska, :nw_territory, :greenland,
                 :alberta, :ontario, :quebec,
-                :west_usa, :east_usa, :mexico
+                :west_usa, :east_usa, :mexico, :regions
 
   def initialize
     @regions = [@alaska = Region.new('Alaska', -22, 36),
@@ -26,7 +34,7 @@ class NorthAmerica
                 @mexico = Region.new('Mexico', 151, 211)]
   end
 
-  def assign_inside_borders
+  def assign_borders_inside
     @alaska.add_neighbor(@nw_territory, @alberta)
     @nw_territory.add_neighbor(@alaska, @alberta, @ontario, @greenland)
     @greenland.add_neighbor(@nw_territory, @ontario, @quebec)
@@ -41,7 +49,7 @@ end
 
 class SouthAmerica
   include Continent
-  attr_accessor :colombia, :peru, :brazil, :argentina
+  attr_accessor :colombia, :peru, :brazil, :argentina, :regions
 
   def initialize
     @regions = [@colombia = Region.new('Colombia', 247, 281),
@@ -50,7 +58,7 @@ class SouthAmerica
                 @argentina = Region.new('Argentina', 248, 459)]
   end
 
-  def assign_inside_borders
+  def assign_borders_inside
     @colombia.add_neighbor(@peru, @brazil)
     @peru.add_neighbor(@colombia, @brazil, @argentina)
     @brazil.add_neighbor(@colombia, @peru, @argentina)
@@ -61,7 +69,7 @@ end
 class Europe
   include Continent
   attr_accessor :iceland, :gr_britain, :scandinavia,
-                :w_europe, :e_europe, :balkans
+                :w_europe, :e_europe, :balkans, :regions
 
   def initialize
     @regions = [@iceland = Region.new('Iceland', 397, 38),
@@ -72,7 +80,7 @@ class Europe
                 @balkans = Region.new('Balkans', 526, 121)]
   end
 
-  def assign_inside_borders
+  def assign_borders_inside
     @iceland.add_neighbor(@gr_britain, @scandinavia)
     @gr_britain.add_neighbor(@iceland, @scandinavia, @w_europe)
     @scandinavia.add_neighbor(@iceland, @gr_britain, @e_europe)
@@ -85,7 +93,7 @@ end
 class Africa
   include Continent
   attr_accessor :w_africa, :egypt, :e_africa,
-                :congo, :s_africa, :madagascar
+                :congo, :s_africa, :madagascar, :regions
 
   def initialize
     @regions = [@w_africa = Region.new('Western Africa', 465, 224),
@@ -96,7 +104,7 @@ class Africa
                 @madagascar = Region.new('Madagascar', 611, 369)]
   end
 
-  def assign_inside_borders
+  def assign_borders_inside
     @w_africa.add_neighbor(@egypt, @e_africa, @congo)
     @egypt.add_neighbor(@w_africa, @e_africa)
     @e_africa.add_neighbor(@w_africa, @egypt, @congo, @s_africa, @madagascar)
@@ -110,7 +118,7 @@ class Asia
   include Continent
   attr_accessor :w_asia, :ural, :w_siberia, :e_siberia, :kamchatka,
                 :mongolia, :arabian_p, :kazakhstan, :china,
-                :gobi_desert, :japan, :india, :indochina_p, :indonesia
+                :gobi_desert, :japan, :india, :indochina_p, :indonesia, :regions
 
   def initialize
     @regions = [@w_asia = Region.new('Western Asia', 618, 76),
@@ -129,7 +137,7 @@ class Asia
                 @indonesia = Region.new('Indonesia', 818, 305)]
   end
 
-  def assign_inside_borders
+  def assign_borders_inside
     @w_asia.add_neighbor(@ural, @arabian_p, @kazakhstan)
     @ural.add_neighbor(@w_asia, @w_siberia, @kazakhstan, @china)
     @w_siberia.add_neighbor(@ural, @e_siberia, @mongolia, @china, @gobi_desert)
@@ -144,5 +152,22 @@ class Asia
     @india.add_neighbor(@arabian_p, @kazakhstan, @china, @indochina_p)
     @indochina_p.add_neighbor(@india, @china, @indonesia)
     @indonesia.add_neighbor(@indochina_p)
+  end
+end
+
+class Australia
+  include Continent
+  attr_accessor :w_australia, :e_australia, :pn_guinea, :regions
+
+  def initialize
+    @regions = [@w_australia = Region.new('Western Australia', 872, 386),
+                @e_australia = Region.new('Eastern Australia', 928, 398),
+                @pn_guinea = Region.new('Papua New Guinea', 924, 319)]
+  end
+
+  def assign_borders_inside
+    @w_australia.add_neighbor(@e_australia, @pn_guinea)
+    @e_australia.add_neighbor(@w_australia, @pn_guinea)
+    @pn_guinea.add_neighbor(@w_australia, @e_australia)
   end
 end
