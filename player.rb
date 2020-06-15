@@ -1,3 +1,6 @@
+require_relative 'regions'
+require_relative 'cards'
+
 module Phase
   DRAW = 0
   ATTACK = 1
@@ -5,20 +8,19 @@ module Phase
 end
 
 class Player
-  attr_accessor :regions
-  attr_reader :phase, :troops
+  attr_reader :phase, :color, :regions
 
   def initialize(color)
     @color = color
-    @regions = []
-    @chosen_region = nil
     @troops = 0
+    @regions = Regions.new
+    @cards = Cards.new
     @phase = Phase::DRAW
   end
 
   def start_turn
     @phase = Phase::DRAW
-    @troops += @regions.count / 3
+    @troops += [@regions.count / 3, 3].max
   end
 
   def end_turn?
@@ -38,50 +40,47 @@ class Player
   end
 
   def occupy?(*regions)
-    regions.flatten.each do |region|
-      return false unless @regions.include?(region)
-    end
-    true
+    regions.flatten.all? { |r| @regions.include? r }
   end
 
-  def event(mouse_x, mouse_y)
+  def territory_award(map)
+    map.continents.each { |c| add_troops(c.value) if occupy?(c.regions) }
+  end
+
+  def event(m_x, m_y)
     case @phase
     when Phase::DRAW
-      @regions.each do |region|
-        if region.clicked?(mouse_x, mouse_y) && troops_avail?
-          region.add_troops
-          @troops -= 1
-        end
+      if @regions.any_clicked?(m_x, m_y) && troops_avail?
+        @regions.clicked(m_x, m_y).add_troops
+        @troops -= 1
       end
-      # check if player's region was clicked, if so:
-        # add one troop to the region
     when Phase::ATTACK
-      # check if player's region was clicked, if so:
-        # if it was chosen: set chosen region to none
-        # else: set it as the chosen region
-      # check if any region is chosen, if so:
-        # check if any of its enemy neighbors was clicked if so:
-          # attack the clicked neighbor
+      if @regions.any_chosen? && @regions.chosen.enemy_neighbors.any_clicked?(m_x, m_y)
+        attacked = @regions.chosen.enemy_neighbors.clicked(m_x, m_y)
+        @regions.chosen.attack(attacked)
+      end
+      @regions.unchoose_all
+      @regions.choose_clicked(m_x, m_y)
     when Phase::FORTIFY
-      # check if player's region was clicked, if so:
-        # if it was chosen: set chosen region to none
-        # else: set it as the chosen region
-      # check if any region is chosen, if so:
-        # check if any of player's other regiuons was clicked if so:
-          # check if the chosen region is connected to the clicked region, if so:
-            # transport one troop to the clicked region, if possible
+      if @regions.any_chosen? && @regions.chosen.connected_allies.any_clicked?(m_x, m_y)
+        fortified = @regions.chosen.connected_allies.clicked(m_x, m_y)
+        @regions.chosen.transport_troops(fortified)
+      else
+        @regions.unchoose_all
+        @regions.choose_clicked(m_x, m_y)
+      end
       # need some way to check if any region was used to fortify in this turn
       # because you can only use one region per turn to fortify
     end
   end
 
   def add_region(region)
-    @regions << region
-    region.color = @color
+    @regions.add(region)
+    region.player = self
   end
 
-  def rand_region
-    @regions.sample
+  def draw
+    @regions.chosen.draw_highlighted if @regions.any_chosen?
   end
 end
 

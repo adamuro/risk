@@ -1,6 +1,7 @@
 require_relative 'continent'
+
 class Map
-  attr_accessor :continents
+  attr_accessor :continents, :n_america
 
   def initialize
     @image = Gosu::Image.new('images/map/map.png')
@@ -14,11 +15,7 @@ class Map
   end
 
   def all_regions
-    regions = []
-    @continents.each do |continent|
-      regions.concat(continent.regions)
-    end
-    regions
+    @continents.each.inject([]) { |all, continent| all.concat(continent.regions) }
   end
 
   def assign_borders
@@ -28,6 +25,7 @@ class Map
     assign_europe_borders
     assign_africa_borders
     assign_asia_borders
+    assign_australia_borders
   end
 
   def assign_n_america_borders
