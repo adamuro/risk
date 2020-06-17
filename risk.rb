@@ -20,20 +20,19 @@ class Risk < Gosu::Window
     elsif @players.current.end_turn?
       @players.next
       @players.current.territory_award(@map)
-      # this should be in other class
     end
 
     close if Gosu.button_down? Gosu::KB_ESCAPE
   end
 
   def draw
-    @map.draw
+    @map.draw(@players.current.regions.chosen)
     @players.draw
     # draw current player(and their troops if drawing)
   end
 
   def button_up(button)
-    #if next_turn_button.clicked?
+    #if next_turn_button.clicked? && !@players.current.regions.any_locked?
     #@players.current.next_phase
     @players.current.event(mouse_x, mouse_y) if button == Gosu::MS_LEFT
     if mouse_x > 1200 && mouse_y > 640

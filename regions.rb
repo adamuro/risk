@@ -6,7 +6,7 @@ class Regions
   def initialize(regions = [])
     @regions = regions
     @chosen = nil
-    @locked = nil
+    @locked = []
   end
 
   def count
@@ -43,6 +43,30 @@ class Regions
 
   def any_chosen?
     @chosen != nil
+  end
+
+  def lock(transporter, receiver)
+    @locked = [transporter, receiver]
+  end
+
+  def unlock
+    @locked = []
+  end
+
+  def any_locked?
+    !@locked.empty?
+  end
+
+  def transporter
+    @locked.first unless @locked.empty?
+  end
+
+  def receiver
+    @locked.last unless @locked.empty?
+  end
+
+  def locked_transport(troops)
+    transporter.transport_troops(receiver, troops)
   end
 
   def to_arr

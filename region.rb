@@ -21,13 +21,8 @@ class Region
   def attack(region)
     fighting = [self, region]
     fighting.sample.remove_troops while @troops > 1 && region.troops.positive?
-    if @troops > 1
-      @player.add_region(region)
-      transport_troops(region, @troops - 1)
-      true
-    else
-      false
-    end
+    @player.add_region(region) unless region.troops.positive?
+    region.troops.positive? ? :defeat : :victory
   end
 
   def transport_troops(region, troops = 1)
@@ -87,6 +82,7 @@ class Region
 
   def draw_highlighted
     @image.draw(@position.x, @position.y, 2, 1, 1, lighten(@player.color))
+    @font.draw_text_rel(@troops.to_s, @font_pos.x, @font_pos.y, 3, 0.5, 0.5)
   end
 
   def lighten(color)

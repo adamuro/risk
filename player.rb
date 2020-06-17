@@ -1,3 +1,4 @@
+require_relative 'troops_sender'
 require_relative 'regions'
 require_relative 'cards'
 
@@ -16,6 +17,7 @@ class Player
     @regions = Regions.new
     @cards = Cards.new
     @phase = Phase::DRAW
+    @troops_sender = nil
   end
 
   def start_turn
@@ -47,6 +49,11 @@ class Player
     map.continents.each { |c| add_troops(c.value) if occupy?(c.regions) }
   end
 
+  def add_region(region)
+    @regions.add(region)
+    region.player = self
+  end
+
   def event(m_x, m_y)
     case @phase
     when Phase::DRAW
@@ -55,16 +62,40 @@ class Player
         @troops -= 1
       end
     when Phase::ATTACK
-      if @regions.any_chosen? && @regions.chosen.enemy_neighbors.any_clicked?(m_x, m_y)
-        attacked = @regions.chosen.enemy_neighbors.clicked(m_x, m_y)
-        @regions.chosen.attack(attacked)
+      if @regions.any_locked?
+        if @troops_sender.confirm_clicked?(m_x, m_y)
+          @regions.locked_transport(@troops_sender.troops)
+          @regions.unlock
+          @troops_sender = nil
+        else
+          @troops_sender.event(m_x, m_y)
+        end
+      else
+        if @regions.any_chosen? && @regions.chosen.enemy_neighbors.any_clicked?(m_x, m_y)
+          attacked = @regions.chosen.enemy_neighbors.clicked(m_x, m_y)
+          result = @regions.chosen.attack(attacked)
+          if result == :victory
+            @regions.lock(@regions.chosen, attacked)
+            @troops_sender = TroopsSender.new(@regions.chosen.troops)
+          end
+        end
+        @regions.unchoose_all
+        @regions.choose_clicked(m_x, m_y)
       end
-      @regions.unchoose_all
-      @regions.choose_clicked(m_x, m_y)
     when Phase::FORTIFY
-      if @regions.any_chosen? && @regions.chosen.connected_allies.any_clicked?(m_x, m_y)
+      if @regions.any_locked?
+        if @troops_sender.confirm_clicked?(m_x, m_y)
+          @regions.locked_transport(@troops_sender.troops)
+          @regions.unlock
+          @troops_sender = nil
+          @phase += 1
+        else
+          @troops_sender.event(m_x, m_y)
+        end
+      elsif @regions.any_chosen? && @regions.chosen.connected_allies.any_clicked?(m_x, m_y)
         fortified = @regions.chosen.connected_allies.clicked(m_x, m_y)
-        @regions.chosen.transport_troops(fortified)
+        @regions.lock(@regions.chosen, fortified)
+        @troops_sender = TroopsSender.new(@regions.chosen.troops)
       else
         @regions.unchoose_all
         @regions.choose_clicked(m_x, m_y)
@@ -74,14 +105,10 @@ class Player
     end
   end
 
-  def add_region(region)
-    @regions.add(region)
-    region.player = self
+  def draw
+    @troops_sender.draw if @troops_sender != nil
   end
 
-  def draw
-    @regions.chosen.draw_highlighted if @regions.any_chosen?
-  end
 end
 
 # think of some way to choose number of troops attacking/fortifying

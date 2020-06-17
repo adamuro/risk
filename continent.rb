@@ -13,8 +13,14 @@ class Continent
     end
   end
 
-  def draw
-    @regions.each(&:draw)
+  def draw(highlighted)
+    @regions.each do |r|
+      if r == highlighted
+        r.draw_highlighted
+      else
+        r.draw
+      end
+    end
   end
 end
 

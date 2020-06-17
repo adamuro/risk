@@ -65,8 +65,8 @@ class Map
     @australia.pn_guinea.add_neighbor(@asia.indonesia)
   end
 
-  def draw
+  def draw(highlighted)
     @image.draw(0, 0, 0)
-    @continents.each(&:draw)
+    @continents.each { |c| c.draw(highlighted)}
   end
 end
