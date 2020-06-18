@@ -1,4 +1,3 @@
-require_relative 'troops_sender'
 require_relative 'regions'
 require_relative 'cards'
 
@@ -9,20 +8,24 @@ module Phase
 end
 
 class Player
-  attr_reader :phase, :color, :regions
+  attr_reader :phase, :color, :regions, :cards
 
   def initialize(color)
     @color = color
     @troops = 0
+    @conquered = false
     @regions = Regions.new
     @cards = Cards.new
     @phase = Phase::DRAW
-    @troops_sender = nil
+    @font = Gosu::Font.new(50, name: 'fonts/BebasNeue-Regular.ttf')
   end
 
   def start_turn
     @phase = Phase::DRAW
+    @cards.draw_card if @conquered
+    @conquered = false
     @troops += [@regions.count / 3, 3].max
+    @regions.unchoose_all
   end
 
   def end_turn?
@@ -60,23 +63,19 @@ class Player
       if @regions.any_clicked?(m_x, m_y) && troops_avail?
         @regions.clicked(m_x, m_y).add_troops
         @troops -= 1
+      elsif @cards.exchange_clicked?(m_x, m_y) && @cards.can_exchange?
+        @troops += @cards.exchange
       end
     when Phase::ATTACK
       if @regions.any_locked?
-        if @troops_sender.confirm_clicked?(m_x, m_y)
-          @regions.locked_transport(@troops_sender.troops)
-          @regions.unlock
-          @troops_sender = nil
-        else
-          @troops_sender.event(m_x, m_y)
-        end
+        @regions.locked_event(m_x, m_y)
       else
         if @regions.any_chosen? && @regions.chosen.enemy_neighbors.any_clicked?(m_x, m_y)
           attacked = @regions.chosen.enemy_neighbors.clicked(m_x, m_y)
           result = @regions.chosen.attack(attacked)
           if result == :victory
             @regions.lock(@regions.chosen, attacked)
-            @troops_sender = TroopsSender.new(@regions.chosen.troops)
+            @conquered = true
           end
         end
         @regions.unchoose_all
@@ -84,31 +83,28 @@ class Player
       end
     when Phase::FORTIFY
       if @regions.any_locked?
-        if @troops_sender.confirm_clicked?(m_x, m_y)
-          @regions.locked_transport(@troops_sender.troops)
-          @regions.unlock
-          @troops_sender = nil
-          @phase += 1
-        else
-          @troops_sender.event(m_x, m_y)
-        end
+        #if nothing is clicked, unlock
+        @phase += 1 if @regions.troops_sender.confirm_clicked?(m_x, m_y)
+        @regions.locked_event(m_x, m_y)
       elsif @regions.any_chosen? && @regions.chosen.connected_allies.any_clicked?(m_x, m_y)
         fortified = @regions.chosen.connected_allies.clicked(m_x, m_y)
         @regions.lock(@regions.chosen, fortified)
-        @troops_sender = TroopsSender.new(@regions.chosen.troops)
+        @regions.troops_sender.turn_on(@regions.chosen.troops)
       else
         @regions.unchoose_all
         @regions.choose_clicked(m_x, m_y)
       end
-      # need some way to check if any region was used to fortify in this turn
-      # because you can only use one region per turn to fortify
     end
   end
 
   def draw
-    @troops_sender.draw if @troops_sender != nil
+    @regions.troops_sender.draw if @regions.any_locked?
   end
 
+  def draw_details
+    if @phase == Phase::DRAW
+      @font.draw_text_rel("Troops: #{@troops}", 640, 685, 1, 0.5, 0.5)
+    end
+    @cards.draw
+  end
 end
-
-# think of some way to choose number of troops attacking/fortifying

@@ -1,12 +1,14 @@
 require_relative 'region'
+require_relative 'troops_sender'
 
 class Regions
-  attr_reader :chosen, :locked
+  attr_reader :chosen, :locked, :troops_sender
 
   def initialize(regions = [])
     @regions = regions
     @chosen = nil
     @locked = []
+    @troops_sender = TroopsSender.new
   end
 
   def count
@@ -46,6 +48,7 @@ class Regions
   end
 
   def lock(transporter, receiver)
+    @troops_sender.turn_on(transporter.troops)
     @locked = [transporter, receiver]
   end
 
@@ -65,8 +68,13 @@ class Regions
     @locked.last unless @locked.empty?
   end
 
-  def locked_transport(troops)
-    transporter.transport_troops(receiver, troops)
+  def locked_event(m_x, m_y)
+    if @troops_sender.confirm_clicked?(m_x, m_y)
+      transporter.transport_troops(receiver, @troops_sender.troops)
+      unlock
+    else
+      @troops_sender.event(m_x, m_y)
+    end
   end
 
   def to_arr

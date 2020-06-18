@@ -40,9 +40,10 @@ class Players
   end
 
   def draw
-    @font.draw_text('Current player:', 980, 660, 3)
     Gosu.draw_rect(1220, 660, 40, 40, @players[@current].color)
+    @font.draw_text('Current player:', 980, 660, 3)
     @players.each(&:draw)
+    current.draw_details
   end
 
   def to_arr

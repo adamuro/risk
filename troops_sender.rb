@@ -1,15 +1,19 @@
 class TroopsSender
   # make plus and minus classes to draw and click them
-  attr_reader :troops
+  attr_reader :troops, :max
 
-  def initialize(max)
+  def initialize
     @troops = 1
-    @max = max
     @font = Gosu::Font.new(40, name: 'fonts/BebasNeue-Regular.ttf')
   end
 
+  def turn_on(max)
+    @troops = 1
+    @max = max
+  end
+
   def draw
-    @font.draw_text_rel('- ' + @troops.to_s + ' +', 640, 640, 3, 0.5, 0.5)
+    @font.draw_text_rel("- #{@troops} +", 640, 640, 3, 0.5, 0.5)
     @font.draw_text_rel('Confirm', 640, 680, 3, 0.5, 0.5)
   end
 
