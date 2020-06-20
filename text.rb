@@ -10,9 +10,9 @@ class Text
 
   def draw(text = @text)
     if @options.include?(:center)
-      @font.draw_text_rel(text, @position.x, @position.y, 1, 0.5, 0)
+      @font.draw_text_rel(text, @position.x, @position.y, ZOrder::TEXT, 0.5, 0)
     else
-      @font.draw_text(text, @position.x, @position.y, 1)
+      @font.draw_text(text, @position.x, @position.y, ZOrder::TEXT)
     end
   end
 end

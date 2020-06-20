@@ -1,6 +1,7 @@
 require_relative 'player'
 require_relative 'color'
 require_relative 'text'
+require_relative 'common'
 
 class Players
   def initialize

@@ -7,7 +7,7 @@ class TroopsSender
   def initialize
     @troops = 1
     @font = Gosu::Font.new(40, name: 'fonts/BebasNeue-Regular.ttf')
-    @confirm = TextButton.new('Confirm', 640, 655, 120, 50, :center)
+    @confirm = TextButton.new('Confirm', Window::CENTER_X, 655, 120, 50, :center)
   end
 
   def turn_on(max)

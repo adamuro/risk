@@ -1,6 +1,7 @@
 require_relative 'regions'
 require_relative 'cards'
 require_relative 'text'
+require_relative 'common'
 
 module Phase
   DRAW = 0
@@ -29,8 +30,8 @@ class Player
     @regions = Regions.new
     @cards = Cards.new
     @phase = Phase::DRAW
-    @phase_text = Text.new(640, 10, 60, :center)
-    @troops_text = Text.new(640,660, 50, :center)
+    @phase_text = Text.new(Window::CENTER_X, 10, 60, :center)
+    @troops_text = Text.new(Window::CENTER_X, 660, 50, :center)
   end
 
   def start_turn

@@ -1,3 +1,5 @@
+require_relative 'common'
+
 class TextButton
   Vector = Struct.new(:x, :y)
 
@@ -11,9 +13,9 @@ class TextButton
 
   def draw
     if @options.include?(:center)
-      @font.draw_text_rel(@text, @position.x, @position.y, 1, 0.5, 0)
+      @font.draw_text_rel(@text, @position.x, @position.y, ZOrder::TEXT, 0.5, 0)
     else
-      @font.draw_text(@text, @position.x, @position.y, 1)
+      @font.draw_text(@text, @position.x, @position.y, ZOrder::TEXT)
     end
   end
 

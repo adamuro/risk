@@ -1,10 +1,11 @@
 require_relative 'continent'
+require_relative 'common'
 
 class Map
   attr_accessor :continents, :n_america
 
   def initialize
-    @image = Gosu::Image.new('images/map/map.png')
+    @background = Gosu::Image.new('images/map/map.png')
     @continents = [@n_america = NorthAmerica.new,
                    @s_america = SouthAmerica.new,
                    @europe = Europe.new,
@@ -66,7 +67,7 @@ class Map
   end
 
   def draw(highlighted)
-    @image.draw(0, 0, 0)
+    @background.draw(0, 0, ZOrder::BACKGROUND)
     @continents.each { |c| c.draw(highlighted)}
   end
 end

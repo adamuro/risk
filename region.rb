@@ -1,4 +1,5 @@
 require_relative 'regions'
+require_relative 'common'
 
 class Region
   Position = Struct.new(:x, :y)
@@ -76,13 +77,13 @@ class Region
   end
 
   def draw
-    @image.draw(@position.x, @position.y, 1, 1, 1, @player.color.get)
-    @font.draw_text_rel(@troops.to_s, @font_pos.x, @font_pos.y, 3, 0.5, 0.5)
+    @image.draw(@position.x, @position.y, ZOrder::REGION, 1, 1, @player.color.get)
+    @font.draw_text_rel(@troops.to_s, @font_pos.x, @font_pos.y, ZOrder::TEXT, 0.5, 0.5)
   end
 
   def draw_highlighted
-    @image.draw(@position.x, @position.y, 2, 1, 1, @player.color.lighten)
-    @font.draw_text_rel(@troops.to_s, @font_pos.x, @font_pos.y, 3, 0.5, 0.5)
+    @image.draw(@position.x, @position.y, ZOrder::REGION, 1, 1, @player.color.lighten)
+    @font.draw_text_rel(@troops.to_s, @font_pos.x, @font_pos.y, ZOrder::TEXT, 0.5, 0.5)
   end
 
   def img_name(name)

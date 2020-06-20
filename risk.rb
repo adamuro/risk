@@ -2,10 +2,11 @@ require 'gosu'
 require_relative 'map'
 require_relative 'players'
 require_relative 'text_button'
+require_relative 'common'
 
 class Risk < Gosu::Window
   def initialize
-    super(1280, 720)
+    super(Window::WIDTH, Window::HEIGHT)
     self.caption = 'Risk'
     @map = Map.new
     @players = Players.new
@@ -39,6 +40,10 @@ class Risk < Gosu::Window
 
   def needs_cursor?
     true
+  end
+
+  def fullscreen?
+    false
   end
 end
 

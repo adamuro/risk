@@ -1,4 +1,5 @@
 require_relative 'text_button'
+require_relative 'common'
 
 class Cards
   def initialize
@@ -43,9 +44,9 @@ class Cards
 
   def draw
     @cards_text.draw
-    @font.draw_text_rel("Infantry: #{infantry}", 70, 570, 1, 0.5, 0)
-    @font.draw_text_rel("Cavalry: #{cavalry}", 70, 600, 1, 0.5, 0)
-    @font.draw_text_rel("Artillery: #{artillery}", 70, 630, 1, 0.5, 0)
+    @font.draw_text_rel("Infantry: #{infantry}", 70, 570, ZOrder::TEXT, 0.5, 0)
+    @font.draw_text_rel("Cavalry: #{cavalry}", 70, 600, ZOrder::TEXT, 0.5, 0)
+    @font.draw_text_rel("Artillery: #{artillery}", 70, 630, ZOrder::TEXT, 0.5, 0)
     @exchange_text.draw if can_exchange?
   end
 
