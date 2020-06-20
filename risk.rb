@@ -1,6 +1,7 @@
 require 'gosu'
 require_relative 'map'
 require_relative 'players'
+require_relative 'text_button'
 
 class Risk < Gosu::Window
   def initialize
@@ -11,7 +12,7 @@ class Risk < Gosu::Window
     @players.distribute_regions(@map)
     @players.distribute_troops
     @players.current.start_turn
-    # add some SKIP button to skip phases
+    @next_phase_button = TextButton.new('Next phase', 1060, 10, 190, 60)
   end
 
   def update
@@ -27,17 +28,13 @@ class Risk < Gosu::Window
 
   def draw
     @map.draw(@players.current.regions.chosen)
+    @next_phase_button.draw
     @players.draw
-    # draw current player(and their troops if drawing)
   end
 
   def button_up(button)
-    #if next_turn_button.clicked? && !@players.current.regions.any_locked?
-    #@players.current.next_phase
     @players.current.event(mouse_x, mouse_y) if button == Gosu::MS_LEFT
-    if mouse_x > 1200 && mouse_y > 640
-      @players.current.next_phase
-    end
+    @players.current.next_phase if @next_phase_button.clicked?(mouse_x, mouse_y)
   end
 
   def needs_cursor?

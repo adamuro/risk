@@ -1,13 +1,16 @@
 require_relative 'player'
+require_relative 'color'
+require_relative 'text'
 
 class Players
   def initialize
     @current = 0
-    @font = Gosu::Font.new(50, name: 'fonts/BebasNeue-Regular.ttf')
-    @players = [Player.new(Gosu::Color::RED),
-                Player.new(Gosu::Color::BLUE),
-                Player.new(Gosu::Color::YELLOW),
-                Player.new(Gosu::Color::GREEN)].shuffle
+    @current_player_text = Text.new(980, 660, 50)
+    @current_player_text.text = 'Current player:'
+    @players = [Player.new(Color::RED),
+                Player.new(Color::BLUE),
+                Player.new(Color::GREEN),
+                Player.new(Color::YELLOW)].shuffle
   end
 
   def distribute_regions(map)
@@ -40,8 +43,8 @@ class Players
   end
 
   def draw
-    Gosu.draw_rect(1220, 660, 40, 40, @players[@current].color)
-    @font.draw_text('Current player:', 980, 660, 3)
+    Gosu.draw_rect(1220, 660, 40, 40, @players[@current].color.get)
+    @current_player_text.draw
     @players.each(&:draw)
     current.draw_details
   end

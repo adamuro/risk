@@ -1,10 +1,22 @@
 require_relative 'regions'
 require_relative 'cards'
+require_relative 'text'
 
 module Phase
   DRAW = 0
   ATTACK = 1
   FORTIFY = 2
+
+  def self.to_s(phase)
+    case phase
+    when DRAW
+      'Draw'
+    when ATTACK
+      'Attack'
+    when FORTIFY
+      'Fortify'
+    end
+  end
 end
 
 class Player
@@ -17,7 +29,8 @@ class Player
     @regions = Regions.new
     @cards = Cards.new
     @phase = Phase::DRAW
-    @font = Gosu::Font.new(50, name: 'fonts/BebasNeue-Regular.ttf')
+    @phase_text = Text.new(640, 10, 60, :center)
+    @troops_text = Text.new(640,660, 50, :center)
   end
 
   def start_turn
@@ -89,7 +102,6 @@ class Player
       elsif @regions.any_chosen? && @regions.chosen.connected_allies.any_clicked?(m_x, m_y)
         fortified = @regions.chosen.connected_allies.clicked(m_x, m_y)
         @regions.lock(@regions.chosen, fortified)
-        @regions.troops_sender.turn_on(@regions.chosen.troops)
       else
         @regions.unchoose_all
         @regions.choose_clicked(m_x, m_y)
@@ -102,9 +114,8 @@ class Player
   end
 
   def draw_details
-    if @phase == Phase::DRAW
-      @font.draw_text_rel("Troops: #{@troops}", 640, 685, 1, 0.5, 0.5)
-    end
+    @troops_text.draw("Troops: #{@troops}") if @phase == Phase::DRAW
+    @phase_text.draw(Phase.to_s(@phase))
     @cards.draw
   end
 end

@@ -76,20 +76,13 @@ class Region
   end
 
   def draw
-    @image.draw(@position.x, @position.y, 1, 1, 1, @player.color)
+    @image.draw(@position.x, @position.y, 1, 1, 1, @player.color.get)
     @font.draw_text_rel(@troops.to_s, @font_pos.x, @font_pos.y, 3, 0.5, 0.5)
   end
 
   def draw_highlighted
-    @image.draw(@position.x, @position.y, 2, 1, 1, lighten(@player.color))
+    @image.draw(@position.x, @position.y, 2, 1, 1, @player.color.lighten)
     @font.draw_text_rel(@troops.to_s, @font_pos.x, @font_pos.y, 3, 0.5, 0.5)
-  end
-
-  def lighten(color)
-    red = [255, color.red + 110].min
-    green = [255, color.green + 110].min
-    blue = [255, color.blue + 110].min
-    Gosu::Color.new(color.alpha, red, green, blue)
   end
 
   def img_name(name)

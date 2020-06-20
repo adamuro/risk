@@ -6,13 +6,6 @@ Position = Struct.new(:x, :y)
 class Continent
   attr_accessor :regions, :value
 
-  def assign_rand(players)
-    regions_shuffle = @regions.shuffle
-    (@regions.count - 1).times do |i|
-      players[i % players.count].add_region(regions_shuffle[i])
-    end
-  end
-
   def draw(highlighted)
     @regions.each do |r|
       if r == highlighted

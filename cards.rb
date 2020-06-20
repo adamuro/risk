@@ -1,8 +1,13 @@
+require_relative 'text_button'
+
 class Cards
   def initialize
     @cards = { infantry: 0, cavalry: 0, artillery: 0 }
     @values = { infantry: 4, cavalry: 6, artillery: 8, all: 10 }
     @font = Gosu::Font.new(30, name: 'fonts/BebasNeue-Regular.ttf')
+    @exchange_text = TextButton.new('Exchange', 16, 660, 135, 50)
+    @cards_text = Text.new(35, 530, 40)
+    @cards_text.text = 'Cards'
   end
 
   def draw_card
@@ -37,13 +42,14 @@ class Cards
   end
 
   def draw
-    @font.draw_text("Infantry: #{infantry}", 10, 560, 1)
-    @font.draw_text("Cavalry: #{cavalry}", 10, 590, 1)
-    @font.draw_text("Artillery: #{artillery}", 10, 620, 1)
-    @font.draw_text('Exchange', 10, 650, 1) if can_exchange?
+    @cards_text.draw
+    @font.draw_text_rel("Infantry: #{infantry}", 70, 570, 1, 0.5, 0)
+    @font.draw_text_rel("Cavalry: #{cavalry}", 70, 600, 1, 0.5, 0)
+    @font.draw_text_rel("Artillery: #{artillery}", 70, 630, 1, 0.5, 0)
+    @exchange_text.draw if can_exchange?
   end
 
   def exchange_clicked?(mouse_x, mouse_y)
-    mouse_x > 10 && mouse_x < 100 && mouse_y > 650 && mouse_y < 680
+    @exchange_text.clicked?(mouse_x, mouse_y)
   end
 end

@@ -1,3 +1,5 @@
+require_relative 'text_button'
+
 class TroopsSender
   # make plus and minus classes to draw and click them
   attr_reader :troops, :max
@@ -5,6 +7,7 @@ class TroopsSender
   def initialize
     @troops = 1
     @font = Gosu::Font.new(40, name: 'fonts/BebasNeue-Regular.ttf')
+    @confirm = TextButton.new('Confirm', 640, 655, 120, 50, :center)
   end
 
   def turn_on(max)
@@ -14,7 +17,7 @@ class TroopsSender
 
   def draw
     @font.draw_text_rel("- #{@troops} +", 640, 640, 3, 0.5, 0.5)
-    @font.draw_text_rel('Confirm', 640, 680, 3, 0.5, 0.5)
+    @confirm.draw
   end
 
   def add
@@ -33,6 +36,6 @@ class TroopsSender
   end
 
   def confirm_clicked?(mouse_x, mouse_y)
-    mouse_x > 600 && mouse_x < 680 && mouse_y > 660 && mouse_y < 700
+    @confirm.clicked?(mouse_x, mouse_y)
   end
 end
