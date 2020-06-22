@@ -6,8 +6,8 @@ class Cards
     @cards = { infantry: 0, cavalry: 0, artillery: 0 }
     @values = { infantry: 4, cavalry: 6, artillery: 8, all: 10 }
     @font = Gosu::Font.new(30, name: 'fonts/BebasNeue-Regular.ttf')
-    @exchange_text = TextButton.new('Exchange', 16, 660, 135, 50)
-    @cards_text = Text.new(35, 530, 40)
+    @exchange_text = TextButton.new('Exchange', 80, 660, 145, 50)
+    @cards_text = Text.new(65, 530, 40)
     @cards_text.text = 'Cards'
   end
 
@@ -42,12 +42,12 @@ class Cards
     @cards[:artillery]
   end
 
-  def draw
+  def draw(mouse_x, mouse_y)
     @cards_text.draw
     @font.draw_text_rel("Infantry: #{infantry}", 70, 570, ZOrder::TEXT, 0.5, 0)
     @font.draw_text_rel("Cavalry: #{cavalry}", 70, 600, ZOrder::TEXT, 0.5, 0)
     @font.draw_text_rel("Artillery: #{artillery}", 70, 630, ZOrder::TEXT, 0.5, 0)
-    @exchange_text.draw if can_exchange?
+    @exchange_text.draw(mouse_x, mouse_y) if can_exchange?
   end
 
   def exchange_clicked?(mouse_x, mouse_y)

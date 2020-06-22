@@ -9,13 +9,13 @@ class Region
 
   def initialize(name, x, y, font_shift_x = 0, font_shift_y = 0)
     @name = name
+    @troops = 0
     @image = Gosu::Image.new(img_name(name))
     @position = Position.new(x, y)
     @font_pos = Position.new(@position.x + @image.width / 2 + font_shift_x,
                              @position.y + @image.height / 2 + font_shift_y)
     @font = Gosu::Font.new(20, name: 'fonts/GROBOLD.ttf')
     @neighbors = []
-    @troops = 0
     @chosen = false
   end
 
@@ -57,7 +57,7 @@ class Region
     Regions.new(@neighbors.select { |neighbor| neighbor.player == @player })
   end
 
-  def connected_allies(allies = Regions.new([self]))
+  def connected_allies(allies = Regions.new(self))
     until allies.to_arr.all? { |a| (a.ally_neighbors.to_arr - allies.to_arr).empty? }
       allies.add(allies.to_arr.map(&:ally_neighbors).map(&:to_arr))
     end

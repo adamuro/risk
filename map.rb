@@ -66,8 +66,8 @@ class Map
     @australia.pn_guinea.add_neighbor(@asia.indonesia)
   end
 
-  def draw(highlighted)
-    @background.draw(0, 0, ZOrder::BACKGROUND)
-    @continents.each { |c| c.draw(highlighted)}
+  def draw(highlighted, color)
+    @background.draw(0, 0, ZOrder::BACKGROUND, 1, 1, color.lighten)
+    @continents.each { |c| c.draw(highlighted) }
   end
 end

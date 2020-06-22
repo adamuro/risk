@@ -13,7 +13,8 @@ class Risk < Gosu::Window
     @players.distribute_regions(@map)
     @players.distribute_troops
     @players.current.start_turn
-    @next_phase_button = TextButton.new('Next phase', 1060, 10, 190, 60)
+    @next_phase_button = TextButton.new('Next phase', 1165, 10, 200, 60)
+    @exit_button = TextButton.new('Exit', 50, 10, 80, 60)
   end
 
   def update
@@ -23,19 +24,21 @@ class Risk < Gosu::Window
       @players.next
       @players.current.territory_award(@map)
     end
-
-    close if Gosu.button_down? Gosu::KB_ESCAPE
   end
 
   def draw
-    @map.draw(@players.current.regions.chosen)
-    @next_phase_button.draw
-    @players.draw
+    @map.draw(@players.current.regions.chosen, @players.current.color)
+    @next_phase_button.draw(mouse_x, mouse_y)
+    @exit_button.draw(mouse_x, mouse_y)
+    @players.draw(mouse_x, mouse_y)
   end
 
   def button_up(button)
-    @players.current.event(mouse_x, mouse_y) if button == Gosu::MS_LEFT
-    @players.current.next_phase if @next_phase_button.clicked?(mouse_x, mouse_y)
+    if button == Gosu::MS_LEFT
+      close if @exit_button.clicked?(mouse_x, mouse_y)
+      @players.current.next_phase if @next_phase_button.clicked?(mouse_x, mouse_y)
+      @players.current.event(mouse_x, mouse_y)
+    end
   end
 
   def needs_cursor?

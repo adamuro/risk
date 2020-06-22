@@ -4,8 +4,8 @@ require_relative 'troops_sender'
 class Regions
   attr_reader :chosen, :locked, :troops_sender
 
-  def initialize(regions = [])
-    @regions = regions
+  def initialize(*regions)
+    @regions = regions.flatten
     @chosen = nil
     @locked = []
     @troops_sender = TroopsSender.new
@@ -69,12 +69,16 @@ class Regions
   end
 
   def locked_event(m_x, m_y)
-    if @troops_sender.confirm_clicked?(m_x, m_y)
+    if @troops_sender.confirm.clicked?(m_x, m_y)
       transporter.transport_troops(receiver, @troops_sender.troops)
       unlock
     else
       @troops_sender.event(m_x, m_y)
     end
+  end
+
+  def map(func)
+    @regions.map { |region| func.call(region) }
   end
 
   def to_arr

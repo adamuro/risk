@@ -27,11 +27,11 @@ class Player
     @color = color
     @troops = 0
     @conquered = false
+    @phase = Phase::DRAW
     @regions = Regions.new
     @cards = Cards.new
-    @phase = Phase::DRAW
-    @phase_text = Text.new(Window::CENTER_X, 10, 60, :center)
-    @troops_text = Text.new(Window::CENTER_X, 660, 50, :center)
+    @phase_text = Text.new(Window::CENTER_X, 10, 60)
+    @troops_text = Text.new(Window::CENTER_X, 660, 50)
   end
 
   def start_turn
@@ -97,8 +97,8 @@ class Player
       end
     when Phase::FORTIFY
       if @regions.any_locked?
-        #if nothing is clicked, unlock
-        @phase += 1 if @regions.troops_sender.confirm_clicked?(m_x, m_y)
+        return @regions.unlock unless @regions.troops_sender.clicked?(m_x, m_y)
+        @phase += 1 if @regions.troops_sender.confirm.clicked?(m_x, m_y)
         @regions.locked_event(m_x, m_y)
       elsif @regions.any_chosen? && @regions.chosen.connected_allies.any_clicked?(m_x, m_y)
         fortified = @regions.chosen.connected_allies.clicked(m_x, m_y)
@@ -110,13 +110,10 @@ class Player
     end
   end
 
-  def draw
-    @regions.troops_sender.draw if @regions.any_locked?
-  end
-
-  def draw_details
+  def draw(mouse_x, mouse_y)
+    @regions.troops_sender.draw(mouse_x, mouse_y) if @regions.any_locked?
     @troops_text.draw("Troops: #{@troops}") if @phase == Phase::DRAW
     @phase_text.draw(Phase.to_s(@phase))
-    @cards.draw
+    @cards.draw(mouse_x, mouse_y)
   end
 end

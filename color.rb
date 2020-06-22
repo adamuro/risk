@@ -21,4 +21,6 @@ class Color
   GREEN = Color.new(0, 255, 0, 255)
   BLUE = Color.new(0, 0, 255, 255)
   YELLOW = Color.new(255, 255, 0, 255)
+  GREY = Color.new(100, 100, 100, 255)
+  COVER = Color.new(16, 16, 16, 127)
 end

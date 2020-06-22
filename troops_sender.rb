@@ -1,13 +1,14 @@
 require_relative 'text_button'
 
 class TroopsSender
-  # make plus and minus classes to draw and click them
-  attr_reader :troops, :max
+  attr_reader :troops, :max, :confirm
 
   def initialize
     @troops = 1
-    @font = Gosu::Font.new(40, name: 'fonts/BebasNeue-Regular.ttf')
-    @confirm = TextButton.new('Confirm', Window::CENTER_X, 655, 120, 50, :center)
+    @font = Gosu::Font.new(50, name: 'fonts/BebasNeue-Regular.ttf')
+    @confirm = TextButton.new('Confirm', Window::CENTER_X, 660, 140, 55)
+    @plus = TextButton.new('+', Window::CENTER_X + 40, 620, 40, 50)
+    @minus = TextButton.new('-', Window::CENTER_X - 40, 620, 40, 50)
   end
 
   def turn_on(max)
@@ -15,9 +16,11 @@ class TroopsSender
     @max = max
   end
 
-  def draw
-    @font.draw_text_rel("- #{@troops} +", 640, 640, 3, 0.5, 0.5)
-    @confirm.draw
+  def draw(mouse_x, mouse_y)
+    @font.draw_text_rel(@troops.to_s, 640, 620, ZOrder::TEXT, 0.5, 0)
+    @confirm.draw(mouse_x, mouse_y)
+    @plus.draw(mouse_x, mouse_y)
+    @minus.draw(mouse_x, mouse_y)
   end
 
   def add
@@ -31,11 +34,11 @@ class TroopsSender
   end
 
   def event(mouse_x, mouse_y)
-    add if Gosu.distance(655, 640, mouse_x, mouse_y) < 10
-    sub if Gosu.distance(625, 640, mouse_x, mouse_y) < 10
+    add if @plus.clicked?(mouse_x, mouse_y)
+    sub if @minus.clicked?(mouse_x, mouse_y)
   end
 
-  def confirm_clicked?(mouse_x, mouse_y)
-    @confirm.clicked?(mouse_x, mouse_y)
+  def clicked?(mouse_x, mouse_y)
+    [@confirm, @plus, @minus].any? { |button| button.clicked?(mouse_x, mouse_y)}
   end
 end

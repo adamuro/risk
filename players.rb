@@ -6,7 +6,7 @@ require_relative 'common'
 class Players
   def initialize
     @current = 0
-    @current_player_text = Text.new(980, 660, 50)
+    @current_player_text = Text.new(1090, 660, 50)
     @current_player_text.text = 'Current player:'
     @players = [Player.new(Color::RED),
                 Player.new(Color::BLUE),
@@ -43,11 +43,10 @@ class Players
     @players.count
   end
 
-  def draw
+  def draw(mouse_x, mouse_y)
     Gosu.draw_rect(1220, 660, 40, 40, @players[@current].color.get)
     @current_player_text.draw
-    @players.each(&:draw)
-    current.draw_details
+    current.draw(mouse_x, mouse_y)
   end
 
   def to_arr
