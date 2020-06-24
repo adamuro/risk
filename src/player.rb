@@ -89,12 +89,11 @@ class Player
       elsif @regions.any_clicked?(m_x, m_y)
         @regions.choose_clicked(m_x, m_y)
         @regions.transport_manager.turn_on(@troops + 1)
-      else
-        if @cards.can_exchange? && @cards.exchange_clicked?(m_x, m_y)
+      elsif @cards.can_exchange? && @cards.exchange_clicked?(m_x, m_y)
           troops = @cards.exchange
           @troops += troops
           Message.exchange(self, troops)
-        end
+      else
         @regions.unchoose
       end
     when Phase::ATTACK
