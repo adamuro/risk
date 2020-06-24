@@ -10,13 +10,13 @@ class Region
   def initialize(name, x, y, font_shift_x = 0, font_shift_y = 0)
     @name = name
     @troops = 0
+    @player = nil
     @image = Gosu::Image.new(img_name(name))
     @position = Position.new(x, y)
     @font_pos = Position.new(@position.x + @image.width / 2 + font_shift_x,
                              @position.y + @image.height / 2 + font_shift_y)
     @font = Gosu::Font.new(20, name: 'fonts/GROBOLD.ttf')
     @neighbors = []
-    @chosen = false
   end
 
   def attack(region)
@@ -74,6 +74,10 @@ class Region
 
   def clicked?(mouse_x, mouse_y)
     Gosu.distance(mouse_x, mouse_y, @font_pos.x, @font_pos.y) < 15
+  end
+
+  def has_player?
+    @player != nil
   end
 
   def draw

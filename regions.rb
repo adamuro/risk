@@ -1,14 +1,14 @@
 require_relative 'region'
-require_relative 'troops_sender'
+require_relative 'transport_manager'
 
 class Regions
-  attr_reader :chosen, :locked, :troops_sender
+  attr_reader :chosen, :transport, :transport_manager
 
   def initialize(*regions)
     @regions = regions.flatten
     @chosen = nil
-    @locked = []
-    @troops_sender = TroopsSender.new
+    @transport = []
+    @transport_manager = TransportManager.new
   end
 
   def count
@@ -39,7 +39,7 @@ class Regions
     choose(clicked(m_x, m_y)) if any_clicked?(m_x, m_y)
   end
 
-  def unchoose_all
+  def unchoose
     @chosen = nil
   end
 
@@ -47,33 +47,34 @@ class Regions
     @chosen != nil
   end
 
-  def lock(transporter, receiver)
-    @troops_sender.turn_on(transporter.troops)
-    @locked = [transporter, receiver]
+  def start_transport(transporter, receiver)
+    @transport_manager.turn_on(transporter.troops)
+    @transport = [transporter, receiver]
   end
 
-  def unlock
-    @locked = []
+  def end_transport
+    @transport = []
   end
 
-  def any_locked?
-    !@locked.empty?
+  def any_transport?
+    !@transport.empty?
   end
 
   def transporter
-    @locked.first unless @locked.empty?
+    @transport.first unless @transport.empty?
   end
 
   def receiver
-    @locked.last unless @locked.empty?
+    @transport.last unless @transport.empty?
   end
 
-  def locked_event(m_x, m_y)
-    if @troops_sender.confirm.clicked?(m_x, m_y)
-      transporter.transport_troops(receiver, @troops_sender.troops)
-      unlock
+  def transport_event(m_x, m_y)
+    if @transport_manager.confirm.clicked?(m_x, m_y)
+      Message.fortify(transporter, @transport_manager.troops, receiver)
+      transporter.transport_troops(receiver, @transport_manager.troops)
+      end_transport
     else
-      @troops_sender.event(m_x, m_y)
+      @transport_manager.event(m_x, m_y)
     end
   end
 
@@ -83,6 +84,10 @@ class Regions
 
   def to_arr
     @regions
+  end
+
+  def delete(region)
+    @regions.delete(region)
   end
 
   def without(region)

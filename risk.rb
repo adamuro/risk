@@ -18,12 +18,11 @@ class Risk < Gosu::Window
   end
 
   def update
-    if !@players.current.troops_avail? && @players.current.phase == Phase::DRAW
-      @players.current.next_phase
-    elsif @players.current.end_turn?
-      @players.next
-      @players.current.territory_award(@map)
+    if @players.count == 1
+      puts "#{@players.current} wins!"
+      close
     end
+    @players.update(@map)
   end
 
   def draw

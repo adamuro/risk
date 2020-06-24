@@ -8,10 +8,10 @@ class Players
     @current = 0
     @current_player_text = Text.new(1090, 660, 50)
     @current_player_text.text = 'Current player:'
-    @players = [Player.new(Color::RED),
-                Player.new(Color::BLUE),
-                Player.new(Color::GREEN),
-                Player.new(Color::YELLOW)].shuffle
+    @players = [Player.new('Red', Color::RED),
+                Player.new('Blue', Color::BLUE),
+                Player.new('Green', Color::GREEN),
+                Player.new('Yellow', Color::YELLOW)].shuffle
   end
 
   def distribute_regions(map)
@@ -35,12 +35,28 @@ class Players
   end
 
   def next
-    @current = (@current + 1) % 4
+    @current = (@current + 1) % @players.count
     @players[@current].start_turn
   end
 
   def count
     @players.count
+  end
+
+  def update(map)
+    @players.each_with_index do |player, i|
+      if player.regions.count.zero?
+        Message.withdraw(player)
+        @players.delete(player)
+        @current -= 1 if i < @current
+      end
+    end
+    if !current.troops_avail? && current.phase == Phase::DRAW
+      current.next_phase
+    elsif current.end_turn?
+      self.next
+      current.territory_award(map)
+    end
   end
 
   def draw(mouse_x, mouse_y)

@@ -1,6 +1,6 @@
 require_relative 'text_button'
 
-class TroopsSender
+class TransportManager
   attr_reader :troops, :max, :confirm
 
   def initialize
