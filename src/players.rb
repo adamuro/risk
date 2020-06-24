@@ -45,7 +45,7 @@ class Players
 
   def update(map)
     @players.each_with_index do |player, i|
-      if player.regions.count.zero?
+      if player.withdraw?
         Message.withdraw(player)
         @players.delete(player)
         @current -= 1 if i < @current

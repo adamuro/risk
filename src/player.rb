@@ -74,6 +74,10 @@ class Player
     region.player = self
   end
 
+  def withdraw?
+    @regions.count.zero?
+  end
+
   def event(m_x, m_y)
     case @phase
     when Phase::DRAW
@@ -102,9 +106,12 @@ class Player
       else
         if @regions.any_chosen? && @regions.chosen.enemy_neighbors.any_clicked?(m_x, m_y)
           attacked = @regions.chosen.enemy_neighbors.clicked(m_x, m_y)
+          attacked_player = attacked.player
           result = @regions.chosen.attack(attacked)
           if result == :victory
             @regions.start_transport(@regions.chosen, attacked)
+            @cards.merge(attacked_player.cards) if attacked_player.withdraw?
+            print attacked.player.withdraw?
             @conquered = true
             Message.conquer(self, attacked)
           end

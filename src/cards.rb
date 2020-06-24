@@ -2,6 +2,8 @@ require_relative 'text_button'
 require_relative 'common'
 
 class Cards
+  attr_reader :cards
+
   def initialize
     @cards = { infantry: 0, cavalry: 0, artillery: 0 }
     @values = { infantry: 4, cavalry: 6, artillery: 8, all: 10 }
@@ -52,5 +54,9 @@ class Cards
 
   def exchange_clicked?(mouse_x, mouse_y)
     @exchange_text.clicked?(mouse_x, mouse_y)
+  end
+
+  def merge(cards)
+    @cards.merge!(cards.cards) { |_, v1, v2| v1 + v2 }
   end
 end
