@@ -23,12 +23,12 @@ class Regions
     @regions.include?(region)
   end
 
-  def clicked(mouse_x, mouse_y)
-    @regions.select { |r| r.clicked?(mouse_x, mouse_y) }.first
+  def clicked(m_x, m_y)
+    @regions.select { |r| r.clicked?(m_x, m_y) }.first
   end
 
-  def any_clicked?(mouse_x, mouse_y)
-    @regions.any? { |r| r.clicked?(mouse_x, mouse_y) }
+  def any_clicked?(m_x, m_y)
+    @regions.any? { |r| r.clicked?(m_x, m_y) }
   end
 
   def choose(region)

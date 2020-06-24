@@ -16,11 +16,11 @@ class TransportManager
     @max = max
   end
 
-  def draw(mouse_x, mouse_y)
+  def draw(m_x, m_y)
     @font.draw_text_rel(@troops.to_s, 640, 620, ZOrder::TEXT, 0.5, 0)
-    @confirm.draw(mouse_x, mouse_y)
-    @plus.draw(mouse_x, mouse_y)
-    @minus.draw(mouse_x, mouse_y)
+    @confirm.draw(m_x, m_y)
+    @plus.draw(m_x, m_y)
+    @minus.draw(m_x, m_y)
   end
 
   def add
@@ -33,12 +33,12 @@ class TransportManager
     @troops -= 1
   end
 
-  def event(mouse_x, mouse_y)
-    add if @plus.clicked?(mouse_x, mouse_y)
-    sub if @minus.clicked?(mouse_x, mouse_y)
+  def event(m_x, m_y)
+    add if @plus.clicked?(m_x, m_y)
+    sub if @minus.clicked?(m_x, m_y)
   end
 
-  def clicked?(mouse_x, mouse_y)
-    [@confirm, @plus, @minus].any? { |button| button.clicked?(mouse_x, mouse_y)}
+  def clicked?(m_x, m_y)
+    [@confirm, @plus, @minus].any? { |button| button.clicked?(m_x, m_y)}
   end
 end

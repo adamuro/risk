@@ -72,8 +72,8 @@ class Region
     @troops -= troops
   end
 
-  def clicked?(mouse_x, mouse_y)
-    Gosu.distance(mouse_x, mouse_y, @font_pos.x, @font_pos.y) < 15
+  def clicked?(m_x, m_y)
+    Gosu.distance(m_x, m_y, @font_pos.x, @font_pos.y) < 15
   end
 
   def change_player(player)

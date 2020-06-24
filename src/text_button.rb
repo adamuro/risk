@@ -11,9 +11,9 @@ class TextButton
     @font = Gosu::Font.new(height, name: 'fonts/BebasNeue-Regular.ttf')
   end
 
-  def draw(mouse_x, mouse_y)
+  def draw(m_x, m_y)
     @font.draw_text_rel(@text, @position.x, @position.y, ZOrder::TEXT, 0.5, 0)
-    if clicked?(mouse_x, mouse_y)
+    if clicked?(m_x, m_y)
       Gosu::draw_rect(@position.x - @size.x / 2, @position.y + 2, @size.x, @size.y, Color::GREY.get, ZOrder::TEXT_COVER)
     end
   end
