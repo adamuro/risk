@@ -18,4 +18,8 @@ module Message
   def self.withdraw(player)
     puts "#{player} withdraws."
   end
+
+  def self.win(player)
+    puts "#{player} wins!"
+  end
 end

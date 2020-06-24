@@ -2,6 +2,7 @@ require 'gosu'
 require_relative 'map'
 require_relative 'players'
 require_relative 'text_button'
+require_relative 'message'
 require_relative 'common'
 
 class Risk < Gosu::Window
@@ -18,11 +19,10 @@ class Risk < Gosu::Window
   end
 
   def update
-    if @players.count == 1
-      puts "#{@players.current} wins!"
-      close
-    end
     @players.update(@map)
+    return unless @players.count == 1
+    Message.win(@players.current)
+    close
   end
 
   def draw

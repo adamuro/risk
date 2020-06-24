@@ -59,7 +59,7 @@ class Region
 
   def connected_allies(allies = Regions.new(self))
     until allies.to_arr.all? { |a| (a.ally_neighbors.to_arr - allies.to_arr).empty? }
-      allies.add(allies.to_arr.map(&:ally_neighbors).map(&:to_arr))
+      allies.add(allies.to_arr.map { |a| a.ally_neighbors.to_arr })
     end
     Regions.new(allies.without(self))
   end
