@@ -70,7 +70,6 @@ class Player
 
   def add_region(region)
     @regions.add(region)
-    region.player.regions.delete(region) if region.has_player?
     region.player = self
   end
 
@@ -125,7 +124,7 @@ class Player
         @regions.transport_event(m_x, m_y)
       elsif @regions.any_chosen? && @regions.chosen.connected_allies.any_clicked?(m_x, m_y)
         fortified = @regions.chosen.connected_allies.clicked(m_x, m_y)
-        @regions.start_transport(@regions.chosen, fortified)
+        @regions.start_transport(@regions.chosen, fortified) if @regions.chosen.troops > 1
       else
         @regions.unchoose
         @regions.choose_clicked(m_x, m_y)

@@ -22,7 +22,7 @@ class Region
   def attack(region)
     fighting = [self, region]
     fighting.sample.remove_troops while @troops > 1 && region.troops.positive?
-    @player.add_region(region) unless region.troops.positive?
+    region.change_player(@player) unless region.troops.positive?
     region.troops.positive? ? :defeat : :victory
   end
 
@@ -76,7 +76,12 @@ class Region
     Gosu.distance(mouse_x, mouse_y, @font_pos.x, @font_pos.y) < 15
   end
 
-  def has_player?
+  def change_player(player)
+    @player.regions.delete(self)
+    player.add_region(self)
+  end
+
+  def player?
     @player != nil
   end
 
