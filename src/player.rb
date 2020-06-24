@@ -111,7 +111,6 @@ class Player
           if result == :victory
             @regions.start_transport(@regions.chosen, attacked)
             @cards.merge(attacked_player.cards) if attacked_player.withdraw?
-            print attacked.player.withdraw?
             @conquered = true
             Message.conquer(self, attacked)
           end
