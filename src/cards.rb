@@ -4,11 +4,12 @@ require_relative 'common'
 class Cards
   attr_reader :cards
 
+  VALUES = { infantry: 4, cavalry: 6, artillery: 8, all: 10 }.freeze
+
   def initialize
     @cards = { infantry: 0, cavalry: 0, artillery: 0 }
-    @values = { infantry: 4, cavalry: 6, artillery: 8, all: 10 }
     @font = Gosu::Font.new(30, name: 'fonts/BebasNeue-Regular.ttf')
-    @exchange_text = TextButton.new('Exchange', 80, 660, 145, 50)
+    @exchange_button = TextButton.new('Exchange', 80, 660, 145, 50)
     @cards_text = Text.new(65, 530, 40)
     @cards_text.text = 'Cards'
   end
@@ -24,11 +25,11 @@ class Cards
   def exchange
     if @cards.values.all?(&:positive?)
       @cards.transform_values! { |v| v - 1 }
-      @values[:all]
+      VALUES[:all]
     else
       key = @cards.select { |_, v| v >= 3 }.keys.first
       @cards[key] -= 3
-      @values[key]
+      VALUES[key]
     end
   end
 
@@ -49,11 +50,11 @@ class Cards
     @font.draw_text_rel("Infantry: #{infantry}", 70, 570, ZOrder::TEXT, 0.5, 0)
     @font.draw_text_rel("Cavalry: #{cavalry}", 70, 600, ZOrder::TEXT, 0.5, 0)
     @font.draw_text_rel("Artillery: #{artillery}", 70, 630, ZOrder::TEXT, 0.5, 0)
-    @exchange_text.draw(mouse_x, mouse_y) if can_exchange?
+    @exchange_button.draw(mouse_x, mouse_y) if can_exchange?
   end
 
   def exchange_clicked?(mouse_x, mouse_y)
-    @exchange_text.clicked?(mouse_x, mouse_y)
+    @exchange_button.clicked?(mouse_x, mouse_y)
   end
 
   def merge(cards)

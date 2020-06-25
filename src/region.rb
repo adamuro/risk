@@ -27,10 +27,10 @@ class Region
   end
 
   def transport_troops(region, troops = 1)
-    if troops < @troops && troops.positive?
-      region.add_troops(troops)
-      @troops -= troops
-    end
+    return unless @troops > troops && troops.positive?
+
+    region.add_troops(troops)
+    @troops -= troops
   end
 
   def neighbor?(region)

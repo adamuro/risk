@@ -93,9 +93,9 @@ class Player
         @regions.choose_clicked(m_x, m_y)
         @regions.transport_manager.turn_on(@troops + 1)
       elsif @cards.can_exchange? && @cards.exchange_clicked?(m_x, m_y)
-          troops = @cards.exchange
-          @troops += troops
-          Message.exchange(self, troops)
+        troops = @cards.exchange
+        @troops += troops
+        Message.exchange(self, troops)
       else
         @regions.unchoose
       end
@@ -120,6 +120,7 @@ class Player
     when Phase::FORTIFY
       if @regions.any_transport?
         return @regions.end_transport unless @regions.transport_manager.clicked?(m_x, m_y)
+
         @phase += 1 if @regions.transport_manager.confirm.clicked?(m_x, m_y)
         @regions.transport_event(m_x, m_y)
       elsif @regions.any_chosen? && @regions.chosen.connected_allies.any_clicked?(m_x, m_y)

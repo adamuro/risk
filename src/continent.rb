@@ -4,7 +4,8 @@ require_relative 'player'
 Position = Struct.new(:x, :y)
 
 class Continent
-  attr_accessor :regions, :value
+  attr_accessor :regions
+  attr_reader :value
 
   def draw(highlighted)
     @regions.each do |r|

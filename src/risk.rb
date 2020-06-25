@@ -21,6 +21,7 @@ class Risk < Gosu::Window
   def update
     @players.update(@map)
     return unless @players.count == 1
+
     Message.win(@players.current)
     close
   end
@@ -33,11 +34,11 @@ class Risk < Gosu::Window
   end
 
   def button_up(button)
-    if button == Gosu::MS_LEFT
-      close if @exit_button.clicked?(mouse_x, mouse_y)
-      @players.current.next_phase if @next_phase_button.clicked?(mouse_x, mouse_y)
-      @players.current.event(mouse_x, mouse_y)
-    end
+    return unless button == Gosu::MS_LEFT
+
+    close if @exit_button.clicked?(mouse_x, mouse_y)
+    @players.current.next_phase if @next_phase_button.clicked?(mouse_x, mouse_y)
+    @players.current.event(mouse_x, mouse_y)
   end
 
   def needs_cursor?

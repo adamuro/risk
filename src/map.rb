@@ -2,7 +2,7 @@ require_relative 'continent'
 require_relative 'common'
 
 class Map
-  attr_accessor :continents, :n_america
+  attr_accessor :continents
 
   def initialize
     @background = Gosu::Image.new('images/map/map.png')

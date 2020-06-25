@@ -78,10 +78,6 @@ class Regions
     end
   end
 
-  def map(func)
-    @regions.map { |region| func.call(region) }
-  end
-
   def to_arr
     @regions
   end
