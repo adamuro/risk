@@ -5,7 +5,7 @@
 Risk is a strategic game for 4 players written in Ruby as a project for my OOP university course.  
 For more info and rules check out [Risk on Wikipedia](https://en.wikipedia.org/wiki/Risk_(game)).  
 
-![](https://imgur.com/a/m9Z8H0E)
+![](https://i.imgur.com/wSEp2ZG.png)
 
 ### Installation
 
